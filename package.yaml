@@ -28,6 +28,8 @@ dependencies:
 - bytestring >= 0.11.3
 - text >= 1.2.5
 - vector >= 0.12
+- lens >= 5.0
+- mtl >= 2.0.0
 
 ghc-options:
 - -Wall

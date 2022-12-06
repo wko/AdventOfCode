@@ -18,6 +18,7 @@ import Data.Maybe (fromJust, catMaybes)
 import Data.Vector (Vector)
 import qualified Data.Vector as V 
 import qualified Data.Text.IO as TIO
+import Debug.Trace
 
 type Block = Char 
 type Stack = [Block]
@@ -30,19 +31,35 @@ data Move = Move {
 
 type Puzzle = (Storage, [Move])
 
-input = TIO.readFile  $ "./files/level5test.txt"
-level5Test = liftM (parseOnly puzzleParser) input
+getPuzzleSolution :: Storage -> String 
+getPuzzleSolution = V.toList . V.map head 
 
 
 
---level5 = do 
---    input <- liftM (parseOnly pairsParser) . BS.readFile  $ "./files/level4.txt"
---    case input of 
---        Right pairs -> 
---            return $ Just $ Data.List.length $ Data.List.filter isOverlapping pairs 
---        Left _ -> return Nothing
+level5a :: IO(Maybe String)
+level5a = do 
+    input <- liftM (parseOnly puzzleParser) . TIO.readFile  $ "./files/level5.txt"
+    case input of 
+        Right (initialStorage, moves) -> do
+            putStrLn (getPuzzleSolution initialStorage)
+            let finalStorage = foldl' (applyMove reverse) initialStorage moves
+            putStrLn $ show finalStorage
+            return $ Just $ getPuzzleSolution finalStorage 
+        Left _ -> return Nothing
         
-    
+
+level5b :: IO(Maybe String)
+level5b = do 
+    input <- liftM (parseOnly puzzleParser) . TIO.readFile  $ "./files/level5.txt"
+    case input of 
+        Right (initialStorage, moves) -> do
+            putStrLn (getPuzzleSolution initialStorage)
+            let finalStorage = foldl' (applyMove id) initialStorage moves
+            putStrLn $ show finalStorage
+            return $ Just $ getPuzzleSolution finalStorage 
+        Left _ -> return Nothing
+
+
 
 storageParser :: Parser [Storage]
 storageParser = undefined
@@ -79,7 +96,7 @@ move = do
     f <- decimal 
     _ <- " to "
     t <- decimal 
-    return $ Move n f t
+    return $ Move n (f-1) (t-1)
 
 moves :: Parser [Move]
 moves = move `sepBy1` endOfLine
@@ -92,3 +109,8 @@ puzzleParser = do
     m <- moves 
     return (storage, m)
     
+applyMove :: ([Block] -> [Block]) -> Storage -> Move -> Storage
+applyMove f s m = s V.// [(from m, remaining), (to m,  f toMove ++ s V.! (to m) )]
+    where 
+        (toMove, remaining) = splitAt (num m) $ s V.! (from m) 
+        

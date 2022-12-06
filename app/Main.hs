@@ -3,16 +3,15 @@ module Main (main) where
 import Level1
 import Level2
 import Level3
-import System.IO 
+import FordFulkerson
 import Control.Monad
 
 
 
 main :: IO ()
 main = do 
-    input <- liftM lines . readFile $  "./files/level1.txt"
-    let m = computeCalories 3 input
-    putStrLn $ show m 
+    test
+    
 
 level1a = do 
     input <- liftM lines . readFile $  "./files/level1.txt"
@@ -45,7 +44,8 @@ level3b = do
     let m = computeBadgePriorities input
     return m
 
-    
+
+
 
 
 mapping :: Char -> Char 

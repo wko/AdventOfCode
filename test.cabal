@@ -30,6 +30,7 @@ library
       Level3
       Level4
       Level5
+      FordFulkerson
   other-modules:
       Paths_test
   hs-source-dirs:
