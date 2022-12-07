@@ -3,7 +3,7 @@ module Main (main) where
 import Level1
 import Level2
 import Level3
-import FordFulkerson
+import FordFulkerson ( test )
 import Control.Monad
 
 
@@ -43,9 +43,6 @@ level3b = do
     input <- liftM lines . readFile $  "./files/level3.txt"
     let m = computeBadgePriorities input
     return m
-
-
-
 
 
 mapping :: Char -> Char 
